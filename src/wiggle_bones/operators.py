@@ -61,7 +61,7 @@ class WiggleReset(Operator):
     
     @classmethod
     def poll(cls,context):
-        return context.scene.wiggle_enable and context.mode in ['OBJECT', 'POSE']
+        return context.scene.wiggle.enable and context.mode in ['OBJECT', 'POSE']
     
     def execute(self,context):
         context.scene.wiggle.reset = True

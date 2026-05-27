@@ -47,7 +47,7 @@ class WiggleObject(PropertyGroup):
     list: CollectionProperty(type=WiggleItem, override={'LIBRARY_OVERRIDABLE'})
 
     #User
-    wiggle_enable : BoolProperty(
+    enable : BoolProperty(
         name = 'Enable Armature',
         description = 'Enable wiggle on this armature',
         default = False,
@@ -55,7 +55,7 @@ class WiggleObject(PropertyGroup):
         override={'LIBRARY_OVERRIDABLE'}
     )
 
-    wiggle_mute : BoolProperty(
+    mute : BoolProperty(
         name = 'Mute Armature',
         description = 'Mute wiggle on this armature.',
         default = False,
@@ -63,7 +63,7 @@ class WiggleObject(PropertyGroup):
         update=lambda s, c: update_prop(s, c, 'wiggle_mute')
     )
 
-    wiggle_freeze : BoolProperty(
+    freeze : BoolProperty(
         name = 'Freeze Wiggle',
         description = 'Wiggle Calculation frozen after baking',
         default = False,
@@ -107,19 +107,19 @@ class WiggleScene(PropertyGroup):
     full_bone_collision: PointerProperty(type=FullBoneCollisionSettings)
 
     #User
-    wiggle_enable : BoolProperty(
+    enable : BoolProperty(
         name = 'Enable Scene',
         description = 'Enable wiggle on this scene',
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_enable')
+        update=lambda s, c: update_prop(s, c, 'wiggle.enable')
     )
 #########################
 
 #### User Toggles ####
-class WiggleBoneSettings(PropertyGroup):
+class WiggleBoneSettings(WiggleBone):
     #Base bone props
-    wiggle_enable : BoolProperty(
+    enable : BoolProperty(
         name = 'Enable Bone',
         description = "Enable wiggle on this bone",
         default = False,
@@ -127,323 +127,323 @@ class WiggleBoneSettings(PropertyGroup):
         override={'LIBRARY_OVERRIDABLE'}
     )
 
-    wiggle_mute : BoolProperty(
+    mute : BoolProperty(
         name = 'Mute Bone',
         description = "Mute wiggle for this bone.",
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_mute')
+        update=lambda s, c: update_prop(s, c, 'mute')
     )
 
-    wiggle_head : BoolProperty(
+    head : BoolProperty(
         name = 'Bone Head',
         description = "Enable wiggle on this bone's head",
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
         options={'HIDDEN'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_head')
+        update=lambda s, c: update_prop(s, c, 'head')
     )
 
-    wiggle_tail : BoolProperty(
+    tail : BoolProperty(
         name = 'Bone Tail',
         description = "Enable wiggle on this bone's tail",
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
         options={'HIDDEN'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_tail')
+        update=lambda s, c: update_prop(s, c, 'tail')
     )
 
-    wiggle_head_mute : BoolProperty(
+    head_mute : BoolProperty(
         name = 'Bone Head Mute',
         description = "Mute wiggle on this bone's head",
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_head_mute')
+        update=lambda s, c: update_prop(s, c, 'head_mute')
     )
 
-    wiggle_tail_mute : BoolProperty(
+    tail_mute : BoolProperty(
         name = 'Bone Tail Mute',
         description = "Mute wiggle on this bone's tail",
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_tail_mute')
+        update=lambda s, c: update_prop(s, c, 'tail_mute')
     )
 
     ### Tail Properties ###
-    wiggle_mass: FloatProperty(
+    mass: FloatProperty(
         name = 'Mass',
         description = 'Mass of bone',
         min = 0.01,
         default = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_mass')
+        update=lambda s, c: update_prop(s, c, 'mass')
     )
 
-    wiggle_stiff : FloatProperty(
+    stiff : FloatProperty(
         name = 'Stiff',
         description = 'Spring stiffness coefficient, can be large numbers',
         min = 0,
         default = 400,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_stiff')
+        update=lambda s, c: update_prop(s, c, 'stiff')
     )
 
-    wiggle_stretch : FloatProperty(
+    stretch : FloatProperty(
         name = 'Stretch',
         description = 'Bone stretchiness factor, 0 to 1 range',
         min = 0,
         default = 0,
         max=1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_stretch')
+        update=lambda s, c: update_prop(s, c, 'stretch')
     )
 
-    wiggle_damp : FloatProperty(
+    damp : FloatProperty(
         name = 'Damp',
         description = 'Dampening coefficient, can be greater than 1',
         min = 0,
         default = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_damp')
+        update=lambda s, c: update_prop(s, c, 'damp')
     )
 
-    wiggle_gravity : FloatProperty(
+    gravity : FloatProperty(
         name = 'Gravity',
         description = 'Multiplier for scene gravity',
         default = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_gravity')
+        update=lambda s, c: update_prop(s, c, 'gravity')
     )
 
-    wiggle_wind_ob : PointerProperty(
+    wind_ob : PointerProperty(
         name='Wind', 
         description='Wind force field object', 
         type=bpy.types.Object, 
         poll = wind_poll, 
         override={'LIBRARY_OVERRIDABLE'}, 
-        update=lambda s, c: update_prop(s, c, 'wiggle_wind_ob')
+        update=lambda s, c: update_prop(s, c, 'wind_ob')
     )
 
-    wiggle_wind : FloatProperty(
+    wind : FloatProperty(
         name = 'Wind Multiplier',
         description = 'Multiplier for wind forces',
         default = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_wind')
+        update=lambda s, c: update_prop(s, c, 'wind')
     )
 
-    wiggle_chain : BoolProperty(
+    chain : BoolProperty(
         name = 'Chain',
         description = 'Bone affects its parent creating a physics chain',
         default = True,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_chain')
+        update=lambda s, c: update_prop(s, c, 'chain')
     )
 
     ### Head Properties ###
-    wiggle_mass_head : FloatProperty(
+    mass_head : FloatProperty(
         name = 'Mass',
         description = 'Mass of bone',
         min = 0.01,
         default = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_mass_head')
+        update=lambda s, c: update_prop(s, c, 'mass_head')
     )
 
-    wiggle_stiff_head : FloatProperty(
+    stiff_head : FloatProperty(
         name = 'Stiff',
         description = 'Spring stiffness coefficient, can be large numbers',
         min = 0,
         default = 400,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_stiff_head')
+        update=lambda s, c: update_prop(s, c, 'stiff_head')
     )
 
-    wiggle_stretch_head : FloatProperty(
+    stretch_head : FloatProperty(
         name = 'Stretch',
         description = 'Bone stretchiness factor, 0 to 1 range',
         min = 0,
         default = 0,
         max=1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_stretch_head')
+        update=lambda s, c: update_prop(s, c, 'stretch_head')
     )
 
-    wiggle_damp_head : FloatProperty(
+    damp_head : FloatProperty(
         name = 'Damp',
         description = 'Dampening coefficient, can be greater than 1',
         min = 0,
         default = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_damp_head')
+        update=lambda s, c: update_prop(s, c, 'damp_head')
     )
 
-    wiggle_gravity_head : FloatProperty(
+    gravity_head : FloatProperty(
         name = 'Gravity',
         description = 'Multiplier for scene gravity',
         default = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_gravity_head')
+        update=lambda s, c: update_prop(s, c, 'gravity_head')
     )
 
-    wiggle_wind_ob_head : PointerProperty(
+    wind_ob_head : PointerProperty(
         name='Wind', 
         description='Wind force field object', 
         type=bpy.types.Object, 
         poll = wind_poll, 
         override={'LIBRARY_OVERRIDABLE'}, 
-        update=lambda s, c: update_prop(s, c, 'wiggle_wind_ob_head')
+        update=lambda s, c: update_prop(s, c, 'wind_ob_head')
     )
 
-    wiggle_wind_head : FloatProperty(
+    wind_head : FloatProperty(
         name = 'Wind',
         description = 'Multiplier for wind forces',
         default = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_wind_head')
+        update=lambda s, c: update_prop(s, c, 'wind_head')
     )
 
-    wiggle_chain_head : BoolProperty(
+    chain_head : BoolProperty(
         name = 'Chain',
         description = 'Bone affects its parent creating a physics chain',
         default = True,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_chain_head')
+        update=lambda s, c: update_prop(s, c, 'chain_head')
     )
 
     ### Tail Colision ###
-    wiggle_collider_type : EnumProperty(
+    collider_type : EnumProperty(
         name='Collider Type',
         items=[('Object','Object','Collide with a selected mesh'),('Collection','Collection','Collide with all meshes in selected collection')],
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_collider_type')
+        update=lambda s, c: update_prop(s, c, 'collider_type')
     )
 
-    wiggle_collider : PointerProperty(
+    collider : PointerProperty(
         name='Collider Object', 
         description='Mesh object to collide with', 
         type=bpy.types.Object, 
         poll = collider_poll, 
         override={'LIBRARY_OVERRIDABLE'}, 
-        update=lambda s, c: update_prop(s, c, 'wiggle_collider')
+        update=lambda s, c: update_prop(s, c, 'collider')
     )
 
-    wiggle_collider_collection : PointerProperty(
+    collider_collection : PointerProperty(
         name = 'Collider Collection', 
         description='Collection to collide with', 
         type=bpy.types.Collection, 
         override={'LIBRARY_OVERRIDABLE'}, 
-        update=lambda s, c: update_prop(s, c, 'wiggle_collider_collection')
+        update=lambda s, c: update_prop(s, c, 'collider_collection')
     )
 
-    wiggle_radius : FloatProperty(
+    radius : FloatProperty(
         name = 'Radius',
         description = 'Collision radius',
         min = 0,
         default = 0,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_radius')
+        update=lambda s, c: update_prop(s, c, 'radius')
     )
 
-    wiggle_friction : FloatProperty(
+    friction : FloatProperty(
         name = 'Friction',
         description = 'Friction when colliding',
         min = 0,
         default = 0.5,
         soft_max = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_friction')
+        update=lambda s, c: update_prop(s, c, 'friction')
     )
 
-    wiggle_bounce : FloatProperty(
+    bounce : FloatProperty(
         name = 'Bounce',
         description = 'Bounciness when colliding',
         min = 0,
         default = 0.5,
         soft_max = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_bounce')
+        update=lambda s, c: update_prop(s, c, 'bounce')
     )
 
-    wiggle_sticky : FloatProperty(
+    sticky : FloatProperty(
         name = 'Sticky',
         description = 'Margin beyond radius to keep item stuck to surface',
         min = 0,
         default = 0,
         soft_max = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_sticky')
+        update=lambda s, c: update_prop(s, c, 'sticky')
     )
 
     ### Head Colision ###
-    wiggle_collider_type_head : EnumProperty(
+    collider_type_head : EnumProperty(
         name='Collider Type',
         items=[('Object','Object','Collide with a selected mesh'),('Collection','Collection','Collide with all meshes in selected collection')],
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_collider_type_head')
+        update=lambda s, c: update_prop(s, c, 'collider_type_head')
     )
 
-    wiggle_collider_head : PointerProperty(
+    collider_head : PointerProperty(
         name='Collider Object', 
         description='Mesh object to collide with', 
         type=bpy.types.Object, 
         poll = collider_poll, 
         override={'LIBRARY_OVERRIDABLE'}, 
-        update=lambda s, c: update_prop(s, c, 'wiggle_collider_head')
+        update=lambda s, c: update_prop(s, c, 'collider_head')
     )
 
-    wiggle_collider_collection_head : PointerProperty(
+    collider_collection_head : PointerProperty(
         name = 'Collider Collection', 
         description='Collection to collide with', 
         type=bpy.types.Collection, 
         override={'LIBRARY_OVERRIDABLE'}, 
-        update=lambda s, c: update_prop(s, c, 'wiggle_collider_collection_head')
+        update=lambda s, c: update_prop(s, c, 'collider_collection_head')
     )
 
-    wiggle_radius_head : FloatProperty(
+    radius_head : FloatProperty(
         name = 'Radius',
         description = 'Collision radius',
         min = 0,
         default = 0,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_radius_head')
+        update=lambda s, c: update_prop(s, c, 'radius_head')
     )
 
-    wiggle_friction_head : FloatProperty(
+    friction_head : FloatProperty(
         name = 'Friction',
         description = 'Friction when colliding',
         min = 0,
         default = 0.5,
         soft_max = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_friction_head')
+        update=lambda s, c: update_prop(s, c, 'friction_head')
     )
 
-    wiggle_bounce_head : FloatProperty(
+    bounce_head : FloatProperty(
         name = 'Bounce',
         description = 'Bounciness when colliding',
         min = 0,
         default = 0.5,
         soft_max = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_bounce_head')
+        update=lambda s, c: update_prop(s, c, 'bounce_head')
     )
 
-    wiggle_sticky_head : FloatProperty(
+    sticky_head : FloatProperty(
         name = 'Sticky',
         description = 'Margin beyond radius to keep item stuck to surface',
         min = 0,
         default = 0,
         soft_max = 1,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_sticky_head')
+        update=lambda s, c: update_prop(s, c, 'sticky_head')
     )
 
 
 classes = [
     WiggleBoneItem,
     WiggleItem,
-    WiggleBone,
+    #WiggleBone,
     WiggleBoneSettings,
     WiggleObject,
     FullBoneCollisionSettings,
@@ -457,8 +457,8 @@ def register():
 
     bpy.types.Scene.wiggle = bpy.props.PointerProperty(type=WiggleScene, override={'LIBRARY_OVERRIDABLE'})
     bpy.types.Object.wiggle = bpy.props.PointerProperty(type=WiggleObject, override={'LIBRARY_OVERRIDABLE'})
-    bpy.types.PoseBone.wiggle = bpy.props.PointerProperty(type=WiggleBone, override={'LIBRARY_OVERRIDABLE'})
-    bpy.types.PoseBone.wiggle_settings = bpy.props.PointerProperty(type=WiggleBoneSettings, override={'LIBRARY_OVERRIDABLE'})
+    #bpy.types.PoseBone.wiggle = bpy.props.PointerProperty(type=WiggleBone, override={'LIBRARY_OVERRIDABLE'})
+    bpy.types.PoseBone.wiggle = bpy.props.PointerProperty(type=WiggleBoneSettings, override={'LIBRARY_OVERRIDABLE'})
 
 def unregister():
     for cl in reversed(classes):
@@ -467,4 +467,4 @@ def unregister():
     del bpy.types.Scene.wiggle
     del bpy.types.Object.wiggle
     del bpy.types.PoseBone.wiggle
-    del bpy.types.PoseBone.wiggle_settings
+    #del bpy.types.PoseBone.wiggle_settings

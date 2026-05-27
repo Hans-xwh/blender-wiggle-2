@@ -31,17 +31,17 @@ def build_list():
         if ob.type != 'ARMATURE': continue
         wigglebones = []
         for b in ob.pose.bones:
-            if b.wiggle_tail or (b.wiggle_head and not b.bone.use_connect):
+            if b.wiggle.tail or (b.wiggle.head and not b.bone.use.connect):
                 wigglebones.append(b)
-                b.wiggle_enable = True
+                b.wiggle.enable = True
             else:
-                b.wiggle_enable = False
+                b.wiggle.enable = False
                 
         if not wigglebones:
-            ob.wiggle_enable = False
+            ob.wiggle.enable = False
             continue
         
-        ob.wiggle_enable = True
+        ob.wiggle.enable = True
         wo = bpy.context.scene.wiggle.list.add()
         wo.name = ob.name
         for b in wigglebones:
@@ -64,7 +64,7 @@ def update_prop(self,context,prop):
 def get_parent(b):
     p = b.parent
     if not p: return None
-    par = p if (p.wiggle_enable and (not p.wiggle_mute) and ((p.wiggle_head and not p.bone.use_connect) or p.wiggle_tail)) else get_parent(p)
+    par = p if (p.wiggle.enable and (not p.wiggle.mute) and ((p.wiggle.head and not p.bone.use_connect) or p.wiggle.tail)) else get_parent(p)
     return par
 
 def length_world(b):
