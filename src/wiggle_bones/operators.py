@@ -15,43 +15,48 @@ class WiggleCopy(Operator):
     
     def execute(self,context):
         b = context.active_pose_bone
-        b.wiggle_mute = b.wiggle_mute
-        b.wiggle_head = b.wiggle_head
-        b.wiggle_tail = b.wiggle_tail
-        b.wiggle_head_mute = b.wiggle_head_mute
-        b.wiggle_tail_mute = b.wiggle_tail_mute
+
+        for bone in context.selected_pose_bones:
+            if not isinstance(bone, bpy.types.PoseBone) or bone == b: continue
+
+            bone.wiggle.mute = b.wiggle.mute
+            bone.wiggle.head = b.wiggle.head
+            bone.wiggle.tail = b.wiggle.tail
+            bone.wiggle.head_mute = b.wiggle.head_mute
+            bone.wiggle.tail_mute = b.wiggle.tail_mute
         
-        b.wiggle_mass = b.wiggle_mass
-        b.wiggle_stiff = b.wiggle_stiff
-        b.wiggle_stretch = b.wiggle_stretch
-        b.wiggle_damp = b.wiggle_damp
-        b.wiggle_gravity = b.wiggle_gravity
-        b.wiggle_wind_ob = b.wiggle_wind_ob
-        b.wiggle_wind = b.wiggle_wind
-        b.wiggle_collider_type = b.wiggle_collider_type
-        b.wiggle_collider = b.wiggle_collider
-        b.wiggle_collider_collection = b.wiggle_collider_collection
-        b.wiggle_radius = b.wiggle_radius
-        b.wiggle_friction = b.wiggle_friction
-        b.wiggle_bounce = b.wiggle_bounce
-        b.wiggle_sticky = b.wiggle_sticky
-        b.wiggle_chain = b.wiggle_chain
+            bone.wiggle.mass = b.wiggle.mass
+            bone.wiggle.stiff = b.wiggle.stiff
+            bone.wiggle.stretch = b.wiggle.stretch
+            bone.wiggle.damp = b.wiggle.damp
+            bone.wiggle.gravity = b.wiggle.gravity
+            bone.wiggle.wind_ob = b.wiggle.wind_ob
+            bone.wiggle.wind = b.wiggle.wind
+            bone.wiggle.collider_type = b.wiggle.collider_type
+            bone.wiggle.collider = b.wiggle.collider
+            bone.wiggle.collider_collection = b.wiggle.collider_collection
+            bone.wiggle.radius = b.wiggle.radius
+            bone.wiggle.friction = b.wiggle.friction
+            bone.wiggle.bounce = b.wiggle.bounce
+            bone.wiggle.sticky = b.wiggle.sticky
+            bone.wiggle.chain = b.wiggle.chain
         
-        b.wiggle_mass_head = b.wiggle_mass_head
-        b.wiggle_stiff_head = b.wiggle_stiff_head
-        b.wiggle_stretch_head = b.wiggle_stretch_head
-        b.wiggle_damp_head = b.wiggle_damp_head
-        b.wiggle_gravity_head = b.wiggle_gravity_head
-        b.wiggle_wind_ob_head = b.wiggle_wind_ob_head
-        b.wiggle_wind_head = b.wiggle_wind_head
-        b.wiggle_collider_type_head = b.wiggle_collider_type_head
-        b.wiggle_collider_head = b.wiggle_collider_head
-        b.wiggle_collider_collection_head = b.wiggle_collider_collection_head
-        b.wiggle_radius_head = b.wiggle_radius_head
-        b.wiggle_friction_head = b.wiggle_friction_head
-        b.wiggle_bounce_head = b.wiggle_bounce_head
-        b.wiggle_sticky_head = b.wiggle_sticky_head
-        b.wiggle_chain_head = b.wiggle_chain_head
+            bone.wiggle.mass_head = b.wiggle.mass_head
+            bone.wiggle.stiff_head = b.wiggle.stiff_head
+            bone.wiggle.stretch_head = b.wiggle.stretch_head
+            bone.wiggle.damp_head = b.wiggle.damp_head
+            bone.wiggle.gravity_head = b.wiggle.gravity_head
+            bone.wiggle.wind_ob_head = b.wiggle.wind_ob_head
+            bone.wiggle.wind_head = b.wiggle.wind_head
+            bone.wiggle.collider_type_head = b.wiggle.collider_type_head
+            bone.wiggle.collider_head = b.wiggle.collider_head
+            bone.wiggle.collider_collection_head = b.wiggle.collider_collection_head
+            bone.wiggle.radius_head = b.wiggle.radius_head
+            bone.wiggle.friction_head = b.wiggle.friction_head
+            bone.wiggle.bounce_head = b.wiggle.bounce_head
+            bone.wiggle.sticky_head = b.wiggle.sticky_head
+            bone.wiggle.chain_head = b.wiggle.chain_head
+
         return {'FINISHED'}
 
 class WiggleReset(Operator):
@@ -172,7 +177,7 @@ class WiggleBake(Operator):
                             use_current_action = context.scene.wiggle.bake_overwrite,
                             bake_types={'POSE'})
         context.scene.wiggle.is_preroll = False
-        context.object.wiggle_freeze = True
+        context.object.wiggle.freeze = True
         if not context.scene.wiggle.bake_overwrite:
             context.object.animation_data.action.name = 'WiggleAction'
         return {'FINISHED'}

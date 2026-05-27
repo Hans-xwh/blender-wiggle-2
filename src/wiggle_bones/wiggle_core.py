@@ -55,8 +55,7 @@ def update_prop(self,context,prop):
         build_list()
     #if True:  #type(self) in [bpy.types.PoseBone, bpy.types.WiggleBoneSettings]: 
     #if type(self) not in [bpy.types.Object]:
-    if not isinstance(self,(bpy.types.Object)):
-        b:bpy.types.Object
+    if not isinstance(self, (bpy.types.Object)):
         #for b in context.selected_pose_bones:  #Unsafe and doesnt work
         #    b[prop] = self[prop]
             
