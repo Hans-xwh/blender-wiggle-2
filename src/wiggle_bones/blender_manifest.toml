@@ -1,0 +1,21 @@
+schema_version = "1.0.0"
+
+id = "wiggle_2"
+name = "Wiggle Bones"
+version = "0.0.1"
+blender_version_min = "4.5.0"
+
+tagline = "Rewrite of blender-wiggle with new features and physics, fully fixed for 5.0+"
+maintainer = "Hans Xwh"
+type = "add-on"
+tags = ["Animation", "Physics"]
+license = ["SPDX:GPL-3.0-or-later"]
+copyright = ["2026 Hans_Xwh"]
+
+website = "https://github.com/Hans-xwh/blender-wiggle-2"
+
+[build]
+paths_exclude_pattern = [
+    "__pycache__/",
+    "*.old"
+]
