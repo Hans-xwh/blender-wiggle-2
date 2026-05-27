@@ -177,11 +177,21 @@ class WiggleBake(Operator):
             context.object.animation_data.action.name = 'WiggleAction'
         return {'FINISHED'}
 
+class WiggleRebuild(Operator):
+    """Rebuild scene Wiggle Bones list"""
+    bl_idname = "wiggle.rebuild"
+    bl_label = "Rebuild Wiggle World"
+    
+    @classmethod
+    def poll(cls,context):
+        return context.scene.wiggle.enable and context.mode in ['OBJECT', 'POSE']
+
 classes =[
     WiggleCopy,
     WiggleReset,
     WiggleSelect,
-    WiggleBake
+    WiggleBake,
+    WiggleRebuild
 ]
 
 def register():

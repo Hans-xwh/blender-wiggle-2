@@ -1,5 +1,6 @@
-import bpy
+#from .properties import WiggleBoneSettings
 
+import bpy
 from mathutils import Vector, Matrix
 
 def relative_matrix(m1,m2):
@@ -31,7 +32,7 @@ def build_list():
         if ob.type != 'ARMATURE': continue
         wigglebones = []
         for b in ob.pose.bones:
-            if b.wiggle.tail or (b.wiggle.head and not b.bone.use.connect):
+            if b.wiggle.tail or (b.wiggle.head and not b.bone.use_connect):
                 wigglebones.append(b)
                 b.wiggle.enable = True
             else:
@@ -47,20 +48,25 @@ def build_list():
         for b in wigglebones:
             wb = wo.list.add()
             wb.name = b.name
+            reset_bone(b)
 
 def update_prop(self,context,prop): 
-    if prop in ['wiggle_mute','wiggle_enable']:
+    if prop in ['mute','enable']:
         build_list()
-    if type(self) == bpy.types.PoseBone: 
-        for b in context.selected_pose_bones:
-            b[prop] = self[prop]
-        if prop in ['wiggle_head', 'wiggle_tail']:
+    #if True:  #type(self) in [bpy.types.PoseBone, bpy.types.WiggleBoneSettings]: 
+    #if type(self) not in [bpy.types.Object]:
+    if not isinstance(self,(bpy.types.Object)):
+        b:bpy.types.Object
+        #for b in context.selected_pose_bones:  #Unsafe and doesnt work
+        #    b[prop] = self[prop]
+            
+        if prop in ['head', 'tail']:
             build_list()
             for b in context.selected_pose_bones:
                 reset_bone(b)
     #edge case where is_rendering gets stuck, the user fiddling with any setting should unstuck it!
     context.scene.wiggle.is_rendering = False
-        
+         
 def get_parent(b):
     p = b.parent
     if not p: return None

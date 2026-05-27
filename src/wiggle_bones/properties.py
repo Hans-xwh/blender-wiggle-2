@@ -51,7 +51,7 @@ class WiggleObject(PropertyGroup):
         name = 'Enable Armature',
         description = 'Enable wiggle on this armature',
         default = False,
-        options={'HIDDEN'},
+        #options={'HIDDEN'},
         override={'LIBRARY_OVERRIDABLE'}
     )
 
@@ -124,13 +124,13 @@ class WiggleBoneSettings(WiggleBone):
         description = "Enable wiggle on this bone",
         default = False,
         options={'HIDDEN'},
-        override={'LIBRARY_OVERRIDABLE'}
+        override={'LIBRARY_OVERRIDABLE'},
     )
 
     mute : BoolProperty(
         name = 'Mute Bone',
         description = "Mute wiggle for this bone.",
-        default = False,
+        default = False ,
         override={'LIBRARY_OVERRIDABLE'},
         update=lambda s, c: update_prop(s, c, 'mute')
     )
