@@ -2,6 +2,7 @@ from .wiggle_core import reset_bone, build_list
 
 import bpy
 from bpy.types import Operator
+from bpy.props import BoolProperty, EnumProperty
 
 
 class WiggleCopy(Operator):
@@ -191,12 +192,91 @@ class WiggleRebuild(Operator):
     def poll(cls,context):
         return context.scene.wiggle.enable and context.mode in ['OBJECT', 'POSE']
 
+class WiggleLegacyCleanup(Operator):
+    """Cleans up the messy properties left over by the legacy Wiggle 2 addon."""
+    bl_idname = "wiggle.cleanup"
+    bl_label = "Legacy Wiggle Clenup"
+    bl_options = {"UNDO"}
+
+    scope : EnumProperty(   #type: ignore
+        name = "Scope",
+        description= "",
+        items=[('SCENE', "Scene", "All objects in current scene. Also cleans up scene properties."),
+               ('SEL', "Selected", "Only selected objects (all bones in selected armatures)."),
+               ],
+        default= 'SCENE'
+    )
+
+    clean : BoolProperty(   #type: ignore
+        name = "Clean",
+        description = "Cleans up leftover properties set by the legacy Wiggle 2.",
+        default= True
+    )
+
+    convert : BoolProperty( #type: ignore
+        name = "Transfer to new Wiggle",
+        description = "Copies the legacy properties to the new Wiggle addon structure before deleting them.",
+        default= True
+    )
+    
+    @classmethod
+    def poll(cls,context):
+        return context.mode in ['POSE', 'OBJECT']
+    
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self,
+                width=300,
+                title= "Legacy Wiggle Cleanup")
+    
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, 'scope')
+        layout.separator()
+        layout.prop(self, 'clean')
+        layout.prop(self, 'convert')
+
+
+    def execute(self, context):
+        objects = context.selected_objects if self.scope == 'SEL' else context.scene.objects
+        print(objects)
+
+        obj_props = ['enable', 'mute', 'freeze']
+        bone_props = ['enable', 'mute', 'head', 'tail', 'head_mute', 'tail_mute',       #This still better than some stuff the original Wiggle 2 did xd
+                      'mass', 'stiff', 'stretch', 'damp', 'gravity', 'wind_ob', 'wind', 'chain',
+                      'mass_head', 'stiff_head', 'stretch_head', 'damp_head', 'gravity_head', 'wind_ob_head', 'wind_head', 'chain_head',
+                      'collider_type', 'collider', 'collider_collection', 'radius', 'friction', 'bounce', 'sticky',
+                      'collider_type_head', 'collider_head', 'collider_collection_head', 'radius_head', 'friction_head', 'bounce_head', 'sticky_head']
+
+        for obj in objects:
+            if obj.type == 'ARMATURE':
+                for pbone in obj.pose.bones:
+                    for prop in bone_props:
+                        if not f"wiggle_{prop}" in pbone: continue
+
+                        if self.convert: pbone.wiggle[prop] = pbone[f'wiggle_{prop}']
+                        if self.clean: del pbone[f'wiggle_{prop}']
+
+            for prop in obj_props:
+                if not f"wiggle_{prop}" in obj: continue
+                if self.convert: obj.wiggle[prop] = obj[f'wiggle_{prop}']
+                if self.clean: del obj[f'wiggle_{prop}']
+
+
+        if 'wiggle_enable' in bpy.context.scene:
+            if self.clean: del bpy.context.scene['wiggle_enable']
+
+        build_list()
+
+        return {'FINISHED'}
+        
+
 classes =[
     WiggleCopy,
     WiggleReset,
     WiggleSelect,
     WiggleBake,
-    WiggleRebuild
+    WiggleRebuild,
+    WiggleLegacyCleanup
 ]
 
 def register():

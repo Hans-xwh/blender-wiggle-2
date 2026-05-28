@@ -241,6 +241,9 @@ class WIGGLE_PT_Utilities(WigglePanel,bpy.types.Panel):
         layout.prop(context.scene.wiggle, 'loop')
         layout.prop(context.scene.wiggle, 'iterations')
 
+        layout.separator()
+        layout.operator('wiggle.cleanup')
+
 class WIGGLE_PT_Bake(WigglePanel,bpy.types.Panel):
     bl_label = 'Bake Wiggle'
     bl_parent_id = 'WIGGLE_PT_Utilities'
