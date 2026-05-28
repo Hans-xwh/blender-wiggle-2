@@ -160,7 +160,10 @@ class WiggleBake(Operator):
             for obj in bpy.context.selected_objects:
                 if obj.type == 'ARMATURE':
                     for bone in obj.pose.bones:
+                        #Im not sure what this is trying to do. Remove the group property...?
+                        #I dont think you can access prop groups as dict keys in the first place
                         if "wiggle" in bone:  # Only clear properties starting with "wiggle"
+                            print(f'"wiggle" removed from bone {bone.name}')
                             del bone["wiggle"]  # Remove the 'wiggle' property
                 
             bpy.ops.nla.bake(frame_start = context.scene.frame_start,
@@ -240,7 +243,7 @@ class WiggleLegacyCleanup(Operator):
         objects = context.selected_objects if self.scope == 'SEL' else context.scene.objects
         print(objects)
 
-        obj_props = ['enable', 'mute', 'freeze']
+        obj_props =  ['enable', 'mute', 'freeze']
         bone_props = ['enable', 'mute', 'head', 'tail', 'head_mute', 'tail_mute',       #This still better than some stuff the original Wiggle 2 did xd
                       'mass', 'stiff', 'stretch', 'damp', 'gravity', 'wind_ob', 'wind', 'chain',
                       'mass_head', 'stiff_head', 'stretch_head', 'damp_head', 'gravity_head', 'wind_ob_head', 'wind_head', 'chain_head',
@@ -249,8 +252,10 @@ class WiggleLegacyCleanup(Operator):
 
         for obj in objects:
             if obj.type == 'ARMATURE':
+                if "wiggle" in obj and self.clean: del obj["wiggle"]
                 for pbone in obj.pose.bones:
                     for prop in bone_props:
+                        if "wiggle" in pbone and self.clean: del pbone["wiggle"]
                         if not f"wiggle_{prop}" in pbone: continue
 
                         if self.convert: pbone.wiggle[prop] = pbone[f'wiggle_{prop}']
@@ -262,8 +267,11 @@ class WiggleLegacyCleanup(Operator):
                 if self.clean: del obj[f'wiggle_{prop}']
 
 
-        if 'wiggle_enable' in bpy.context.scene:
-            if self.clean: del bpy.context.scene['wiggle_enable']
+        if self.clean and 'wiggle_enable' in bpy.context.scene:
+            del bpy.context.scene['wiggle_enable']
+
+        if self.clean and 'wiggle' in bpy.context.scene:
+            del bpy.context.scene['wiggle']
 
         build_list()
 
