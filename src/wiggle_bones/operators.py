@@ -150,18 +150,20 @@ class WiggleBake(Operator):
                 frame = context.scene.frame_end - (preroll%duration)
                 context.scene.frame_set(frame)
             else:
-                context.scene.frame_set(context.scene.frame_start)
+                context.scene.frame_set(context.scene.frame_start - preroll - 1)
             context.scene.wiggle.is_preroll = True
             preroll -= 1
 
         #bake
         if bpy.app.version[0] >= 4 and bpy.app.version[1] > 0:
+            ## Im not sure what this is trying to do. Remove the group property...?    ##
+            ## I dont think you can access prop groups as dict keys in the first place ##
+
             # Before calling bpy.ops.nla.bake(), clear any conflicting IDProperties
             #for obj in bpy.context.selected_objects:
             #    if obj.type == 'ARMATURE':
             #        for bone in obj.pose.bones:
-            #            #Im not sure what this is trying to do. Remove the group property...?
-            #            #I dont think you can access prop groups as dict keys in the first place
+            #            
             #            if "wiggle" in bone:  # Only clear properties starting with "wiggle"
             #                print(f'"wiggle" removed from bone {bone.name}')
             #                del bone["wiggle"]  # Remove the 'wiggle' property
@@ -194,6 +196,9 @@ class WiggleRebuild(Operator):
     @classmethod
     def poll(cls,context):
         return context.scene.wiggle.enable and context.mode in ['OBJECT', 'POSE']
+
+    def execute(self, context):
+        build_list()
 
 class WiggleLegacyCleanup(Operator):
     """Cleans up the messy properties left over by the legacy Wiggle 2 addon."""
