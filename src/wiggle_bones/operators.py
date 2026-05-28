@@ -157,14 +157,14 @@ class WiggleBake(Operator):
         #bake
         if bpy.app.version[0] >= 4 and bpy.app.version[1] > 0:
             # Before calling bpy.ops.nla.bake(), clear any conflicting IDProperties
-            for obj in bpy.context.selected_objects:
-                if obj.type == 'ARMATURE':
-                    for bone in obj.pose.bones:
-                        #Im not sure what this is trying to do. Remove the group property...?
-                        #I dont think you can access prop groups as dict keys in the first place
-                        if "wiggle" in bone:  # Only clear properties starting with "wiggle"
-                            print(f'"wiggle" removed from bone {bone.name}')
-                            del bone["wiggle"]  # Remove the 'wiggle' property
+            #for obj in bpy.context.selected_objects:
+            #    if obj.type == 'ARMATURE':
+            #        for bone in obj.pose.bones:
+            #            #Im not sure what this is trying to do. Remove the group property...?
+            #            #I dont think you can access prop groups as dict keys in the first place
+            #            if "wiggle" in bone:  # Only clear properties starting with "wiggle"
+            #                print(f'"wiggle" removed from bone {bone.name}')
+            #                del bone["wiggle"]  # Remove the 'wiggle' property
                 
             bpy.ops.nla.bake(frame_start = context.scene.frame_start,
                             frame_end = context.scene.frame_end,
@@ -243,7 +243,7 @@ class WiggleLegacyCleanup(Operator):
         objects = context.selected_objects if self.scope == 'SEL' else context.scene.objects
         print(objects)
 
-        obj_props =  ['enable', 'mute', 'freeze']
+        obj_props = ['enable', 'mute', 'freeze']
         bone_props = ['enable', 'mute', 'head', 'tail', 'head_mute', 'tail_mute',       #This still better than some stuff the original Wiggle 2 did xd
                       'mass', 'stiff', 'stretch', 'damp', 'gravity', 'wind_ob', 'wind', 'chain',
                       'mass_head', 'stiff_head', 'stretch_head', 'damp_head', 'gravity_head', 'wind_ob_head', 'wind_head', 'chain_head',
