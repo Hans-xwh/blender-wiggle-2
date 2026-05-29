@@ -240,7 +240,6 @@ class WiggleLegacyCleanup(Operator):
 
     def execute(self, context):
         objects = context.selected_objects if self.scope == 'SEL' else context.scene.objects
-        print(objects)
 
         obj_props = ['enable', 'mute', 'freeze']
         bone_props = ['enable', 'mute', 'head', 'tail', 'head_mute', 'tail_mute',       #This still better than some stuff the original Wiggle 2 did xd
