@@ -1,19 +1,16 @@
-# Wiggle 2
+# Wiggle Bones
+Wiggle Bones is a physics simulation add-on for Blender. It enables the bones to behave like dynamic springy rigid bodies, allowing for real time simulation of wiggly physics.
 
-Wiggle 2 is a complete rewrite of the original [wiggle bones add-on](https://github.com/shteeve3d/blender-wiggle) for Blender, offering improved features and stability. It is far from perfect, but it definitely gets the job done!
 
 ## Fork Notice
+This project is based on [jurassicjordan's fork](https://github.com/jurassicjordan/blender-wiggle-2) of [Labhatorian's fork](https://github.com/Labhatorian/blender-wiggle-2) of the original [Wiggle 2 by shteeve3d](https://github.com/shteeve3d/blender-wiggle-2)  
 
-This project is a fork of the original [blender-wiggle-2 by Steve Miller](https://github.com/shteeve3d/blender-wiggle-2). Modifications have been made to fix compatibility issues with newer Blender versions, new features for bone collision, along with code cleanup and an updated README. 
+Wiggle Bones is a partial refactor of the original **Wiggle 2** add-on, aiming to ensure compatibility with Blender 5.0 and newer and resolve some of the long standing issues it had, while maintaining the physics behavior of the original intact.
 
-I have minimal experience in Blender, I was asked by a friend to fix this add-on. So everything else is extra and I am by no means an expert in this. If anyone wants to continue/improve it, be my guest (◕‿◕).
+For a more detailed list of changes, check the [Fixes](#fixes--changes) section below.  
 
-For a detailed list of changes, refer to the notice in [`wiggle_2.py`](./wiggle_2.py).
 
 ## Features
-
-### New Physics Logic
-- Wiggling now simulates more realistic movements, particularly for ropes or chains.
 
 ### Pinning
 - By applying a damped track constraint on a wiggling bone, you can pin it to its target, allowing other bones to respond accordingly.
@@ -33,13 +30,13 @@ For a detailed list of changes, refer to the notice in [`wiggle_2.py`](./wiggle_
 - Manage everything from a single panel in the 3D animation view for a streamlined, fullscreen workflow.
 
 ### (Work in Progress) Bone Pairs
-This feature pairs bones and together with full collision detection generates an invisible plane between them, is then used for collissions. 
+This feature pairs bones and together with full collision detection generates an invisible plane between them, which is then used for collisions. 
 
 Please note that this implementation is still experimental and might not work perfectly since it's a bit challenging to test and refine. You can explore the current code on the [Bone Pairs branch](https://github.com/Labhatorian/blender-wiggle-2/tree/bonepairs).
 
 ## Usage
 
-1. **Install and Enable the Addon**
+1. **Install and Enable the Add-on**
    - Enable wiggle in your scene via the properties panel of the 3D viewport under the Animation tab. \
    ![Enable Scene](./images/enable_scene.png?raw=true "Enable Scene")
 
@@ -63,7 +60,6 @@ Please note that this implementation is still experimental and might not work pe
 7. **Set Up Collision**
    - Select a collision object or collection to enable interactions, providing additional tuning options for collision behavior. \
    ![Configure Collision](./images/configure_collision.png?raw=true "Configure Collision")
-   - all bone collisions option
    - **Full Bone Collision Option**: \
    ![Full Bone Collision Settings](./images/fullbone_collision.png?raw=true "Configure Full Bone Collision")
      - You can enable collision detection for the entire length of the bone by checking the **Enable Full Bone Collision** option in the _Global Wiggle Utilities_. This allows for more accurate collision interactions along the entire bone rather than just at the head or tail. 
@@ -81,6 +77,48 @@ Please note that this implementation is still experimental and might not work pe
    - Overwrite merges keyframes into the armature's current action or creates a new one. Preroll runs the simulation for a specified number of frames, allowing it to settle, and works in tandem with 'Loop physics' for clean animated loops. \
    ![Bake](./images/bake.png?raw=true "Bake")
 
+10. **Legacy Wiggle Cleanup**
+   - A utility made to clean up ID Properties left over by older versions of Wiggle 2. 
+   - Optionally allows to transfer the old settings to the new Group-based properties before removing them.  
+   ![Cleanup](./images/cleanup.png?raw=true "Cleanup")  
+
+
+## Fixes & Changes
+This version focuses on code cleanup, maintainability and compatibility with current versions of Blender. Below is a list of the principal changes introduced in this fork.  
+   * Migrated properties to be stored on **Property Groups**:  
+      * Previous versions of Wiggle 2 saved bone settings as ID properties, accessible as dictionary keys, which were never unregistered, and resulted in the properties being saved in the `.blend` file even when the add-on was not enabled.  
+      * Now all properties reside on a single `wiggle` Property Group.  
+
+   * Legacy data migration & cleanup:  
+      * Added an operator to deal with the *"lint"* properties left behind by older versions of Wiggle 2, with the option to copy them to the new group-based structure.  
+
+   * Code cleanup & bug fixes:  
+      * Divided the monolith single file add-on into multiple, more easily workable files.  
+      * Removed problematic syncing behavior.  
+      * Fixed drawing of the *Collision Settings* panel.  
+      * Fixed use of *Preroll* when baking the wiggle simulation.  
+
+Please check the upstream forks for more details on their changes over the original Wiggle 2.  
+
+### Comparison between original and new Wiggle
+| New Wiggle Bones (Blender 5.1) | Original Wiggle 2 (Blender 3.6) |
+| :---: | :---: |
+| ![DemoNew](./images/spark_new.gif) | ![DemoOld](./images/spark_og.gif) |
+
+Motion: The Spark by Epic, converted to vmd by LeomarieMMD & Hulasemoos.
+
+
+## Other Cool Wiggle Forks
+The following are two notable Wiggle 2 forks with different physics algorithms, each producing a distinct simulation. 
+
+* [Jiggle Physics](https://github.com/naelstrof/blender-jiggle-physics) by naelstrof. 
+      A fork of Wiggle 2 that implements a Verlet algorithm for the simulation. 
+
+* [Wiggle 2: RTX Edition](https://github.com/mayalhc/blender-wiggle-2) by mayalhc. 
+      A complete rewrite of Wiggle 2, implementing a new physics system. 
+
+
+
 ## License
-Wiggle 2 is licensed under the [GNU General Public License, Version 3](./LICENSE). \
-Individual files may have different, but compatible licenses.
+Wiggle Bones is licensed under the [GNU General Public License, Version 3](./LICENSE). \
+Individual files may have different, but compatible licenses. 
