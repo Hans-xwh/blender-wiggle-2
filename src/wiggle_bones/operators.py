@@ -145,6 +145,7 @@ class WiggleBake(Operator):
         context.scene.wiggle.is_preroll = False
         bpy.ops.wiggle.select()
         bpy.ops.wiggle.reset()
+
         while preroll >= 0:
             if context.scene.wiggle.loop:
                 frame = context.scene.frame_end - (preroll%duration)
@@ -153,35 +154,28 @@ class WiggleBake(Operator):
                 context.scene.frame_set(context.scene.frame_start - preroll - 1)
             context.scene.wiggle.is_preroll = True
             preroll -= 1
+        
+        ## Im not sure what this is trying to do. Remove the group property...?    ##
+        ## I dont think you can access prop groups as dict keys in the first place ##
+        # Before calling bpy.ops.nla.bake(), clear any conflicting IDProperties
+        #for obj in bpy.context.selected_objects:
+        #    if obj.type == 'ARMATURE':
+        #        for bone in obj.pose.bones:
+        #            
+        #            if "wiggle" in bone:  # Only clear properties starting with "wiggle"
+        #                print(f'"wiggle" removed from bone {bone.name}')
+        #                del bone["wiggle"]  # Remove the 'wiggle' property
 
-        #bake
-        if bpy.app.version[0] >= 4 and bpy.app.version[1] > 0:
-            ## Im not sure what this is trying to do. Remove the group property...?    ##
-            ## I dont think you can access prop groups as dict keys in the first place ##
-
-            # Before calling bpy.ops.nla.bake(), clear any conflicting IDProperties
-            #for obj in bpy.context.selected_objects:
-            #    if obj.type == 'ARMATURE':
-            #        for bone in obj.pose.bones:
-            #            
-            #            if "wiggle" in bone:  # Only clear properties starting with "wiggle"
-            #                print(f'"wiggle" removed from bone {bone.name}')
-            #                del bone["wiggle"]  # Remove the 'wiggle' property
-                
-            bpy.ops.nla.bake(frame_start = context.scene.frame_start,
+        #Bake
+        bpy.ops.nla.bake(frame_start = context.scene.frame_start,
                             frame_end = context.scene.frame_end,
                             only_selected = True,
                             visual_keying = True,
                             use_current_action = context.scene.wiggle.bake_overwrite,
                             bake_types={'POSE'},
                             channel_types={'LOCATION','ROTATION','SCALE'})
-        else:
-            bpy.ops.nla.bake(frame_start = context.scene.frame_start,
-                            frame_end = context.scene.frame_end,
-                            only_selected = True,
-                            visual_keying = True,
-                            use_current_action = context.scene.wiggle.bake_overwrite,
-                            bake_types={'POSE'})
+        
+                
         context.scene.wiggle.is_preroll = False
         context.object.wiggle.freeze = True
         if not context.scene.wiggle.bake_overwrite:

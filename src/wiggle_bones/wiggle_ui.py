@@ -21,9 +21,11 @@ class WIGGLE_PT_Settings(WigglePanel, Panel):
         if not context.scene.wiggle.enable:
             row.label(text='Scene muted.')
             return
+        
         if not context.object.type == 'ARMATURE':
             row.label(text = ' Select armature.')
             return
+        
         if context.object.wiggle.freeze:
             row.prop(context.object.wiggle, 'freeze',icon='FREEZE',icon_only=True,emboss=False)
             row.label(text = 'Wiggle Frozen after Bake.')
@@ -34,9 +36,11 @@ class WIGGLE_PT_Settings(WigglePanel, Panel):
         if context.object.wiggle.mute:
             row.label(text='Armature muted.')
             return
+        
         if not context.active_pose_bone:
             row.label(text = ' Select pose bone.')
             return
+        
         icon = 'HIDE_ON' if context.active_pose_bone.wiggle.mute else 'BONE_DATA'
         row.prop(context.active_pose_bone.wiggle, 'mute', icon=icon,icon_only=True,invert_checkbox=True,emboss=False)
         if context.active_pose_bone.wiggle.mute:
@@ -234,10 +238,12 @@ class WIGGLE_PT_Utilities(WigglePanel,bpy.types.Panel):
         layout.use_property_split=True
         layout.use_property_decorate=False
         col = layout.column(align=True)
+
         if context.object.wiggle.enable and context.mode == 'POSE':
             col.operator('wiggle.copy')
             col.operator('wiggle.select')
         col.operator('wiggle.reset')
+
         layout.prop(context.scene.wiggle, 'loop')
         layout.prop(context.scene.wiggle, 'iterations')
 

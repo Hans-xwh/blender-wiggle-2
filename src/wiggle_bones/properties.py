@@ -1,6 +1,6 @@
 #type: ignore
 
-from .wiggle_core import *  #sorry not sorry
+from .wiggle_core import update_prop, wind_poll, collider_poll
 
 import bpy
 from bpy.types import PropertyGroup, Object, Collection
@@ -457,7 +457,6 @@ def register():
 
     bpy.types.Scene.wiggle = bpy.props.PointerProperty(type=WiggleScene, override={'LIBRARY_OVERRIDABLE'})
     bpy.types.Object.wiggle = bpy.props.PointerProperty(type=WiggleObject, override={'LIBRARY_OVERRIDABLE'})
-    #bpy.types.PoseBone.wiggle = bpy.props.PointerProperty(type=WiggleBone, override={'LIBRARY_OVERRIDABLE'})
     bpy.types.PoseBone.wiggle = bpy.props.PointerProperty(type=WiggleBoneSettings, override={'LIBRARY_OVERRIDABLE'})
 
 def unregister():
@@ -467,4 +466,3 @@ def unregister():
     del bpy.types.Scene.wiggle
     del bpy.types.Object.wiggle
     del bpy.types.PoseBone.wiggle
-    #del bpy.types.PoseBone.wiggle_settings
