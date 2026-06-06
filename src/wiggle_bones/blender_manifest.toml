@@ -12,7 +12,7 @@ tags = ["Physics"]
 license = ["SPDX:GPL-3.0-or-later"]
 copyright = ["2026 Hans_Xwh"]
 
-website = "https://github.com/Hans-xwh/blender-wiggle-2"
+website = "https://github.com/Hans-xwh/wiggle-bones"
 
 [build]
 paths_exclude_pattern = [

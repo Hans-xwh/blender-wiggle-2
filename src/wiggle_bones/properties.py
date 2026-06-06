@@ -1,6 +1,6 @@
 #type: ignore
 
-from .wiggle_core import update_prop, wind_poll, collider_poll
+from .wiggle_core import update_prop, wind_poll, collider_poll, build_list
 
 import bpy
 from bpy.types import PropertyGroup, Object, Collection
@@ -60,7 +60,8 @@ class WiggleObject(PropertyGroup):
         description = 'Mute wiggle on this armature.',
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle_mute')
+        #update=lambda s, c: update_prop(s, c, 'wiggle_mute')
+        update=lambda s, c: build_list()
     )
 
     freeze : BoolProperty(
@@ -106,13 +107,30 @@ class WiggleScene(PropertyGroup):
     reset: BoolProperty(default=False)
     full_bone_collision: PointerProperty(type=FullBoneCollisionSettings)
 
+    #Internal
+    syncing : BoolProperty(
+        name= 'Syncing',
+        description= "Currently syncing bones",
+        default= False,
+        override={'LIBRARY_OVERRIDABLE'},
+        options={'HIDDEN', 'SKIP_SAVE'}
+    )
+
+    auto_sync : BoolProperty(
+        name= 'Auto Sync Bones',
+        description= "When changing bone settings, apply changes to all selected bones.",
+        default= False,
+        override={'LIBRARY_OVERRIDABLE'}
+    )
+
     #User
     enable : BoolProperty(
         name = 'Enable Scene',
         description = 'Enable wiggle on this scene',
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'wiggle.enable')
+        #update=lambda s, c: update_prop(s, c, 'wiggle.enable')
+        update=lambda s, c: build_list()
     )
 #########################
 
@@ -132,7 +150,8 @@ class WiggleBoneSettings(WiggleBone):
         description = "Mute wiggle for this bone.",
         default = False ,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'mute')
+        #update=lambda s, c: update_prop(s, c, 'mute')
+        update=lambda s, c: build_list()
     )
 
     head : BoolProperty(
@@ -141,7 +160,8 @@ class WiggleBoneSettings(WiggleBone):
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
         options={'HIDDEN'},
-        update=lambda s, c: update_prop(s, c, 'head')
+        #update=lambda s, c: update_prop(s, c, 'head')
+        update=lambda s, c: build_list()
     )
 
     tail : BoolProperty(
@@ -150,7 +170,8 @@ class WiggleBoneSettings(WiggleBone):
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
         options={'HIDDEN'},
-        update=lambda s, c: update_prop(s, c, 'tail')
+        #update=lambda s, c: update_prop(s, c, 'tail')
+        update=lambda s, c: build_list()
     )
 
     head_mute : BoolProperty(
@@ -158,7 +179,7 @@ class WiggleBoneSettings(WiggleBone):
         description = "Mute wiggle on this bone's head",
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'head_mute')
+        update=lambda s, c: build_list()
     )
 
     tail_mute : BoolProperty(
@@ -166,7 +187,7 @@ class WiggleBoneSettings(WiggleBone):
         description = "Mute wiggle on this bone's tail",
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
-        update=lambda s, c: update_prop(s, c, 'tail_mute')
+        update=lambda s, c: build_list()
     )
 
     ### Tail Properties ###
@@ -460,9 +481,9 @@ def register():
     bpy.types.PoseBone.wiggle = bpy.props.PointerProperty(type=WiggleBoneSettings, override={'LIBRARY_OVERRIDABLE'})
 
 def unregister():
-    for cl in reversed(classes):
-        bpy.utils.unregister_class(cl)
-
     del bpy.types.Scene.wiggle
     del bpy.types.Object.wiggle
     del bpy.types.PoseBone.wiggle
+
+    for cl in reversed(classes):
+        bpy.utils.unregister_class(cl)

@@ -16,6 +16,7 @@ class WiggleCopy(Operator):
     
     def execute(self,context):
         b = context.active_pose_bone
+        context.scene.wiggle.syncing = True     #Doesn't really cause any problem, but there's no point in allowing sync here.
 
         for bone in context.selected_pose_bones:
             if not isinstance(bone, bpy.types.PoseBone) or bone == b: continue
@@ -57,6 +58,8 @@ class WiggleCopy(Operator):
             bone.wiggle.bounce_head = b.wiggle.bounce_head
             bone.wiggle.sticky_head = b.wiggle.sticky_head
             bone.wiggle.chain_head = b.wiggle.chain_head
+
+        context.scene.wiggle.syncing = False
 
         return {'FINISHED'}
 
@@ -185,7 +188,8 @@ class WiggleBake(Operator):
 class WiggleRebuild(Operator):
     """Rebuild scene Wiggle Bones list"""
     bl_idname = "wiggle.rebuild"
-    bl_label = "Rebuild Wiggle World"
+    bl_label = "Rebuild Wiggle Scene. "
+    bl_description = "Force a rebuild of the scene's internal wiggle bones list. Helps unstuck physics."
     
     @classmethod
     def poll(cls,context):
@@ -193,6 +197,8 @@ class WiggleRebuild(Operator):
 
     def execute(self, context):
         build_list()
+
+        return {'FINISHED'}
 
 class WiggleLegacyCleanup(Operator):
     """Cleans up the messy properties left over by the legacy Wiggle 2 addon."""
