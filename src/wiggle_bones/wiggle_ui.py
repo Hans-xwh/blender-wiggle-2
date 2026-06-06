@@ -11,7 +11,7 @@ class WigglePanel:
         return context.object
     
 class WIGGLE_PT_Settings(WigglePanel, Panel):
-    bl_label = 'Wiggle 2'
+    bl_label = 'Wiggle Bones'
         
     def draw(self,context):
         row = self.layout.row()
@@ -46,6 +46,8 @@ class WIGGLE_PT_Settings(WigglePanel, Panel):
         if context.active_pose_bone.wiggle.mute:
             row.label(text='Bone muted.')
             return
+        
+        self.layout.prop(context.scene.wiggle, "auto_sync")
 
 class WIGGLE_PT_Head(WigglePanel, bpy.types.Panel):
     bl_label = ''
@@ -242,6 +244,7 @@ class WIGGLE_PT_Utilities(WigglePanel,bpy.types.Panel):
         if context.object.wiggle.enable and context.mode == 'POSE':
             col.operator('wiggle.copy')
             col.operator('wiggle.select')
+            col.operator('wiggle.rebuild')
         col.operator('wiggle.reset')
 
         layout.prop(context.scene.wiggle, 'loop')

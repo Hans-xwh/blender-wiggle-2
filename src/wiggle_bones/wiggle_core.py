@@ -47,19 +47,21 @@ def build_list():
             wb = wo.list.add()
             wb.name = b.name
             reset_bone(b)
+    bpy.context.scene.wiggle.syncing = False    #Just in case it crashes while syncing, flag will be cleared on rebuild.
 
-def update_prop(self,context,prop): 
-    if prop in ['mute','enable']:
-        build_list()
+def update_prop(self, context:bpy.types.Context, prop): 
+    if context.scene.wiggle.auto_sync and context.mode == 'POSE' and context.active_pose_bone:
+        if context.scene.wiggle.syncing == False:
+            context.scene.wiggle.syncing = True
 
-    if not isinstance(self, (bpy.types.Object)):
-        #for b in context.selected_pose_bones:  #Unsafe and doesnt work
-        #    b[prop] = self[prop]
-            
-        if prop in ['head', 'tail']:
-            build_list()
-            for b in context.selected_pose_bones:
-                reset_bone(b)
+            b:bpy.types.PoseBone
+            for b in context.selected_pose_bones:  #Still a bit unsafe but now works
+                if b == context.active_pose_bone: continue
+                if b.wiggle.mute or not (b.wiggle.head or b.wiggle.tail): continue   #Skips disabled bones
+
+                setattr(b.wiggle, prop, getattr(self, prop))
+            context.scene.wiggle.syncing = False
+
     #edge case where is_rendering gets stuck, the user fiddling with any setting should unstuck it!
     context.scene.wiggle.is_rendering = False
          
