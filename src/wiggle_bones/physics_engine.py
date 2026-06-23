@@ -480,7 +480,7 @@ def wiggle_pre(scene):
             b.rotation_quaternion = Quaternion((1,0,0,0))
             b.rotation_euler = Vector((0,0,0))
             b.scale = Vector((1,1,1))
-    bpy.context.view_layer.update()
+    #bpy.context.view_layer.update()
 
 @persistent                
 def wiggle_post(scene,dg):

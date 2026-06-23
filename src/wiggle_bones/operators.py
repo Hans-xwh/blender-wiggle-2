@@ -104,6 +104,16 @@ class WiggleSelect(Operator):
     def execute(self,context):
         bpy.ops.pose.select_all(action='DESELECT')
         rebuild = False
+
+        #Makes select work on 4.5 LTS
+        if bpy.app.version >= (5,0,0):
+            def sel(pbone, val):
+                pbone.select = val
+        else:
+            def sel(pbone, val):
+                pbone.bone.select = val
+
+        #Loopy loop to select bones
         for wo in context.scene.wiggle.list:
             ob = context.scene.objects.get(wo.name)
             if not ob:
@@ -114,7 +124,7 @@ class WiggleSelect(Operator):
                 if not b:
                     rebuild = True
                     continue
-                b.select = True  # Select the pose bone directly
+                sel(b, True)  # Select the pose bone directly
         if rebuild: build_list()
         return {'FINISHED'}
     
