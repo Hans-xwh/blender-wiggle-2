@@ -15,7 +15,19 @@ class WiggleItem(PropertyGroup):
     name: StringProperty(override={'LIBRARY_OVERRIDABLE'})  
     list: CollectionProperty(type=WiggleBoneItem, override={'LIBRARY_OVERRIDABLE','USE_INSERTION'})    
 
-#store properties for a bone. custom properties for user editable. property group for internal calculations
+    solver : EnumProperty(
+        name = 'Solver Type',
+        description = 'Solver type for the physics simulation',
+        items=[
+            ('FW', 'Forward', 'Standard solver'),
+            ('BK', 'Backwards', 'Inverted solver for pinning'),
+            ('MX', 'Mixed', 'Mixed solver for a balance between stability and accuracy'),
+            ('DL', 'Dual', 'Dual solver for more accurate simulations. May be slower'),
+        ],
+        default='FW',
+    )
+
+#store properties for a bone. property group for internal calculations
 class WiggleBone(PropertyGroup):
     matrix: FloatVectorProperty(name = 'Matrix', size=16, subtype = 'MATRIX', override={'LIBRARY_OVERRIDABLE'})
     position: FloatVectorProperty(subtype='TRANSLATION', override={'LIBRARY_OVERRIDABLE'})
@@ -69,6 +81,26 @@ class WiggleObject(PropertyGroup):
         description = 'Wiggle Calculation frozen after baking',
         default = False,
         override={'LIBRARY_OVERRIDABLE'}
+    )
+
+    use_pin : BoolProperty(
+        name = 'Enable Pinning',
+        description= '',
+        default= False,
+        override= {'LIBRARY_OVERRIDABLE'},
+        update=lambda s, c: build_list()
+    )
+
+    solver : EnumProperty(
+        name = 'Solver Type',
+        description = 'Solver type for the physics simulation',
+        items=[
+            ('BK', 'Backwards', 'Inverted solver for more stable pinning'),
+            ('MX', 'Mixed', 'Mixed solver for a balance between stability and accuracy'),
+            ('DL', 'Dual', 'Dual solver for more accurate simulations. May be slower'),
+        ],
+        default='BK',
+        update=lambda s, c: build_list()
     )
 
 class FullBoneCollisionSettings(PropertyGroup):
@@ -458,6 +490,13 @@ class WiggleBoneSettings(WiggleBone):
         soft_max = 1,
         override={'LIBRARY_OVERRIDABLE'},
         update=lambda s, c: update_prop(s, c, 'sticky_head')
+    )
+
+    pin_target : PointerProperty(
+        name='Pin Target',
+        description='Object to pin the bone to',
+        type=bpy.types.Object,
+        override={'LIBRARY_OVERRIDABLE'},
     )
 
 
