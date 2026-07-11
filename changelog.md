@@ -4,6 +4,7 @@
 ### Bone Pinning
 * Fixed a bug allowing `wiggle_reset()` to run on an invalid context. 
 * Fixed a bug that could cause the simulation to crash if a bone had zero scale. 
+* Fixed bone pinning system, reimplementing it to be independant from Blender modifiers.
 
 
 ## 1.0.2 - (2026/06/23)

@@ -13,12 +13,34 @@ For a more detailed list of changes, check the [Fixes](#fixes--changes) section 
 ## Features
 
 ### Pinning
-- By applying a damped track constraint on a wiggling bone, you can pin it to its target, allowing other bones to respond accordingly.
+Pinning allows a Wiggle Bone to follow an object affecting the whole chain. 
+
 ![Pinning](./images/pinning.png?raw=true "Pinning")
+
+#### Using pinning 
+* Enable `Pinning on Armature` for the armature. 
+* Select a Wiggle bone and assign a `Pin Target` from the *Bone Tail* settings. 
+* Pinning accuracy depends on the scene's **Quality** setting. Longer bone chains may require higher quality values. 
+
+#### Pin Solvers
+Different solvers provide different tradeoffs between simulation quality, pinning accuracy and performance.
+
+- **Forward** *(default)* - Original Wiggle solver. Fastest and preserves the classic simulation, but incompatible with pins. Used automatically when pinning is disabled.
+- **Backwards** - Prioritizes accurate pinning, especially on long chains, at the expense of different simulation behavior. 
+- **Mixed** - Alternates between Forward and Backwards passes to balance pinning accuracy and simulation quality. 
+- **Dual** - Runs both Forward and Backwards passes every iteration. Provides the strongest pinning but has the highest computational cost. 
+
+![Solvers](./images/pinning_2.png?raw=true "Solvers") 
+
 
 ### Collision Support
 - Bones can interact with specified meshes or collections, with options for friction, bouncing, or stickiness.
 ![Collision](./images/collision.png?raw=true "Collision")
+
+### Legacy Wiggle Cleanup  
+   - A utility made to clean up ID Properties left over by older versions of Wiggle 2. 
+   - Optionally allows to transfer the old settings to the new Group-based properties before removing them.  
+   ![Cleanup](./images/cleanup.png?raw=true "Cleanup")  
 
 ### Linking and Library Overrides
 - Wiggle 2 supports library-linked assets, allowing for overrides that let you fine-tune your wiggle per scene.
@@ -34,7 +56,7 @@ This feature pairs bones and together with full collision detection generates an
 
 Please note that this implementation is still experimental and might not work perfectly since it's a bit challenging to test and refine. You can explore the current code on the [Bone Pairs branch](https://github.com/Labhatorian/blender-wiggle-2/tree/bonepairs).
 
-## Usage
+## Quick Start
 
 1. **Install and Enable the Add-on**
    - Enable wiggle in your scene via the properties panel of the 3D viewport under the Animation tab. \
@@ -76,11 +98,6 @@ Please note that this implementation is still experimental and might not work pe
    - The Bake Wiggle sub-utility converts live physics simulations into keyframes, affecting all visible wiggle bones in the viewport. 
    - Overwrite merges keyframes into the armature's current action or creates a new one. Preroll runs the simulation for a specified number of frames, allowing it to settle, and works in tandem with 'Loop physics' for clean animated loops. \
    ![Bake](./images/bake.png?raw=true "Bake")
-
-10. **Legacy Wiggle Cleanup**
-   - A utility made to clean up ID Properties left over by older versions of Wiggle 2. 
-   - Optionally allows to transfer the old settings to the new Group-based properties before removing them.  
-   ![Cleanup](./images/cleanup.png?raw=true "Cleanup")  
 
 
 ## Fixes & Changes
