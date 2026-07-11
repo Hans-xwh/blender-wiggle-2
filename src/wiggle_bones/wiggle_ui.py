@@ -49,7 +49,7 @@ class WIGGLE_PT_Settings(WigglePanel, Panel):
         
         self.layout.prop(context.scene.wiggle, "auto_sync")
 
-class WIGGLE_PT_Head(WigglePanel, bpy.types.Panel):
+class WIGGLE_PT_Head(WigglePanel, Panel):
     bl_label = ''
     bl_parent_id = 'WIGGLE_PT_Settings'
     bl_options = {'HEADER_LAYOUT_EXPAND'}
@@ -59,8 +59,8 @@ class WIGGLE_PT_Head(WigglePanel, bpy.types.Panel):
         return context.scene.wiggle.enable and context.object and not context.object.wiggle.mute and context.active_pose_bone and not context.active_pose_bone.wiggle.mute and not context.active_pose_bone.bone.use_connect
     
     def draw_header(self, context):
-        row = self.layout.row(align=True)
-        row.prop(context.active_pose_bone.wiggle, 'head')
+        row = self.layout.row(align=False)
+        self.layout.prop(context.active_pose_bone.wiggle, 'head')
     
     def draw(self, context):
         b = context.active_pose_bone
@@ -137,7 +137,7 @@ class WIGGLE_PT_Head(WigglePanel, bpy.types.Panel):
         
         layout.prop(b.wiggle, 'chain_head')
 
-class WIGGLE_PT_Tail(WigglePanel, bpy.types.Panel):
+class WIGGLE_PT_Tail(WigglePanel, Panel):
     bl_label = ''
     bl_parent_id = 'WIGGLE_PT_Settings'
     bl_options = {'HEADER_LAYOUT_EXPAND'}
@@ -224,9 +224,40 @@ class WIGGLE_PT_Tail(WigglePanel, bpy.types.Panel):
             col = layout.column(align=True)
             drawprops(col, b.wiggle, ['radius', 'friction', 'bounce', 'sticky'])
         
-        layout.prop(b.wiggle, 'chain')
+        layout.prop(b.wiggle, 'chain', text='Chain', icon='LINKED')
 
-class WIGGLE_PT_Utilities(WigglePanel,bpy.types.Panel):
+        if context.object.wiggle.use_pin:
+            pin_row = layout.row(align=True)
+
+            pin_row.prop(b.wiggle, 'pin_target', text='Pin Target')
+            if b.wiggle.pin_target and b.wiggle.pin_target.name not in context.scene.objects:
+                pin_row.label(text='', icon='UNLINKED')
+
+class WIGGLE_PT_Pin(WigglePanel, Panel):
+    bl_label = ''
+    bl_parent_id = 'WIGGLE_PT_Settings'
+    bl_options = {'HEADER_LAYOUT_EXPAND'}
+
+    @classmethod
+    def poll(cls, context):
+        return context.object.type == 'ARMATURE' and context.mode == 'OBJECT' and context.scene.wiggle.enable and context.object and not context.object.wiggle.mute
+    
+    def draw_header(self, context):
+        row = self.layout.row(align=True)
+        row.prop(context.active_object.wiggle, 'use_pin', text='Enable Pin on Armature', icon_only=False)
+
+    def draw(self, context):
+        obj = context.object
+        if not obj.wiggle.use_pin:
+            return
+
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        layout.prop(obj.wiggle, 'solver')
+
+class WIGGLE_PT_Utilities(WigglePanel, Panel):
     bl_label = 'Global Wiggle Utilities'
     bl_parent_id = 'WIGGLE_PT_Settings'
     bl_options = {"DEFAULT_CLOSED"}
@@ -244,7 +275,7 @@ class WIGGLE_PT_Utilities(WigglePanel,bpy.types.Panel):
         if context.object.wiggle.enable and context.mode == 'POSE':
             col.operator('wiggle.copy')
             col.operator('wiggle.select')
-            col.operator('wiggle.rebuild')
+        col.operator('wiggle.rebuild')
         col.operator('wiggle.reset')
 
         layout.prop(context.scene.wiggle, 'loop')
@@ -253,7 +284,7 @@ class WIGGLE_PT_Utilities(WigglePanel,bpy.types.Panel):
         layout.separator()
         layout.operator('wiggle.cleanup')
 
-class WIGGLE_PT_Bake(WigglePanel,bpy.types.Panel):
+class WIGGLE_PT_Bake(WigglePanel, Panel):
     bl_label = 'Bake Wiggle'
     bl_parent_id = 'WIGGLE_PT_Utilities'
     bl_options = {"DEFAULT_CLOSED"}
@@ -273,7 +304,7 @@ class WIGGLE_PT_Bake(WigglePanel,bpy.types.Panel):
         row.prop(context.scene.wiggle, 'bake_nla')
         layout.operator('wiggle.bake')
 
-class WIGGLE_PT_Fullbone_Collision(bpy.types.Panel):
+class WIGGLE_PT_Fullbone_Collision(Panel):
     bl_label = "Full Bone Collision Settings"
     bl_idname = "WIGGLE_PT_Fullbone_Collision"
     bl_parent_id = "WIGGLE_PT_Utilities"
@@ -295,6 +326,7 @@ classes = [
     WIGGLE_PT_Settings,
     WIGGLE_PT_Head,
     WIGGLE_PT_Tail,
+    WIGGLE_PT_Pin,
     WIGGLE_PT_Utilities,
     WIGGLE_PT_Bake,
     WIGGLE_PT_Fullbone_Collision
