@@ -7,6 +7,7 @@ from bpy.app.handlers import persistent
 
 
 def collide(b, dg, head=False):
+    if bpy.context.mode != 'OBJECT': return
     dt = bpy.context.scene.wiggle.dt
     
     if head:

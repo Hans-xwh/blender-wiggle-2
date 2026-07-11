@@ -1,10 +1,12 @@
 # Changelog
 
-## [Unreleased]
+
+## 1.1.0 - (2026/07/11)
 ### Bone Pinning
+* Fixed bone pinning system, reimplementing it to be independant from Blender modifiers.
 * Fixed a bug allowing `wiggle_reset()` to run on an invalid context. 
 * Fixed a bug that could cause the simulation to crash if a bone had zero scale. 
-* Fixed bone pinning system, reimplementing it to be independant from Blender modifiers.
+* Fixed collisions being calculated on an invalid context (edit mode). 
 
 
 ## 1.0.2 - (2026/06/23)
