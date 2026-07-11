@@ -233,7 +233,8 @@ def pin(b):
         goal = c.target.matrix_world
         if c.subtarget:
             goal = goal @ c.target.pose.bones[c.subtarget].matrix
-        b.wiggle.position = b.wiggle.position*(1-c.influence) + goal.translation*c.influence
+        #b.wiggle.position = b.wiggle.position*(1-c.influence) + goal.translation*c.influence
+        b.wiggle.position = goal.translation        #Wiggle ignores the influecen, so it can pin and not have Blender try to rotate the bone
 
 #can include gravity, wind, etc    
 def move(b,dg):
@@ -415,7 +416,7 @@ def constrain(b,i,dg):
             collide(p,dg) #would only be tail changing
             update_matrix(p)
         if b.wiggle.tail:
-            pin(b)
+            #pin(b)
             if bpy.context.scene.wiggle.full_bone_collision.enable_fullbone_collision:
                 collide_full_bone(b, dg)
             else:
@@ -490,7 +491,7 @@ def wiggle_post(scene,dg):
     if scene.wiggle.is_rendering: return
 
     lastframe = scene.wiggle.lastframe
-    if (scene.frame_current == scene.frame_start) and (scene.wiggle.loop == False) and (scene.wiggle.is_preroll == False):
+    if (scene.frame_current == scene.frame_start) and (scene.wiggle.loop == False) and (scene.wiggle.is_preroll == False) and bpy.context.mode in ['OBJECT', 'POSE']:
         bpy.ops.wiggle.reset()
         return
     if scene.frame_current >= lastframe:
@@ -510,23 +511,43 @@ def wiggle_post(scene,dg):
         bones = []
         for wb in wo.list:
             b = ob.pose.bones[wb.name]
+
             if b.wiggle.mute or not (b.wiggle.head or b.wiggle.tail):
                 continue
             bones.append(ob.pose.bones[wb.name])
+
         for b in bones:
             b.wiggle.collision_normal = b.wiggle.collision_normal_head = Vector((0,0,0))
             move(b,dg)
+
         for i in range(scene.wiggle.iterations):
             for b in bones:
                 constrain(b, scene.wiggle.iterations-1-i,dg)
+
+        for i in range(scene.wiggle.iterations):
+            order = bones if i % 2 == 0 else reversed(bones)
+            for b in order:
+                constrain(b, scene.wiggle.iterations-1-i,dg)
+                pin(b)
+
+        #So turns out i need to traverse the bones in reverse, otherwise pin doesn't work. It does mess up simulation tho...
+        #for i in range(scene.wiggle.iterations):
+        #    for b in reversed():
+        #        pass
+        #        #constrain(b, scene.wiggle.iterations-1-i,dg)
+        #        constrain(b, 1, dg)
+        #        pin(b)
+
         for b in bones:
             update_matrix(b,True) #final update handling constraints?
+
         if frames_elapsed:
             for b in bones:
                 vb = Vector((0,0,0))
                 if b.wiggle.collision_normal.length:
                     vb = b.wiggle.velocity.reflect(b.wiggle.collision_normal).project(b.wiggle.collision_normal)*b.wiggle.bounce
                 b.wiggle.velocity = (b.wiggle.position - b.wiggle.position_last)/max(frames_elapsed,1) + vb
+
                 vb = Vector((0,0,0)) 
                 if b.wiggle.collision_normal_head.length:
                     vb = b.wiggle.velocity_head.reflect(b.wiggle.collision_normal_head).project(b.wiggle.collision_normal_head)*b.wiggle.bounce_head

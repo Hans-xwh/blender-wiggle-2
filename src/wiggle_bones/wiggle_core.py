@@ -2,7 +2,7 @@ import bpy
 from mathutils import Vector, Matrix
 
 def relative_matrix(m1,m2):
-    return (m2.inverted() @ m1).inverted()
+    return (m2.inverted_safe() @ m1).inverted_safe()
 
 def flatten(mat):
     dim = len(mat)
