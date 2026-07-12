@@ -1,6 +1,12 @@
 # Changelog
 
 
+## 1.1.1 - (2026/07/12) 
+### Bone Pinning 
+* Fixed inconsistencies in the UI. 
+* Improved description of Bone properties. 
+
+
 ## 1.1.0 - (2026/07/11)
 ### Bone Pinning
 * Reimplemented bone pinning system to be independent from Blender constraints. 
