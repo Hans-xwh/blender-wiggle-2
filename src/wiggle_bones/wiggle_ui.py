@@ -240,7 +240,7 @@ class WIGGLE_PT_Pin(WigglePanel, Panel):
 
     @classmethod
     def poll(cls, context):
-        return context.object.type == 'ARMATURE' and context.mode == 'OBJECT' and context.scene.wiggle.enable and context.object and not context.object.wiggle.mute
+        return context.active_object and context.active_object.type == 'ARMATURE' and context.mode == 'OBJECT' and context.scene.wiggle.enable and not context.active_object.wiggle.mute
     
     def draw_header(self, context):
         row = self.layout.row(align=True)
