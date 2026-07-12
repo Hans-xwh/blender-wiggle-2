@@ -179,7 +179,7 @@ class WiggleBoneSettings(WiggleBone):
 
     mute : BoolProperty(
         name = 'Mute Bone',
-        description = "Mute wiggle for this bone.",
+        description = "Mute wiggle for this bone. Excluded from Auto Sync",
         default = False ,
         override={'LIBRARY_OVERRIDABLE'},
         #update=lambda s, c: update_prop(s, c, 'mute')
@@ -188,7 +188,7 @@ class WiggleBoneSettings(WiggleBone):
 
     head : BoolProperty(
         name = 'Bone Head',
-        description = "Enable wiggle on this bone's head",
+        description = "Enable wiggle on this bone's head. Excluded from Auto Sync",
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
         options={'HIDDEN'},
@@ -198,7 +198,7 @@ class WiggleBoneSettings(WiggleBone):
 
     tail : BoolProperty(
         name = 'Bone Tail',
-        description = "Enable wiggle on this bone's tail",
+        description = "Enable wiggle on this bone's tail. Excluded from Auto Sync",
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
         options={'HIDDEN'},
@@ -208,7 +208,7 @@ class WiggleBoneSettings(WiggleBone):
 
     head_mute : BoolProperty(
         name = 'Bone Head Mute',
-        description = "Mute wiggle on this bone's head",
+        description = "Mute wiggle on this bone's head. Excluded from Auto Sync",
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
         update=lambda s, c: build_list()
@@ -216,7 +216,7 @@ class WiggleBoneSettings(WiggleBone):
 
     tail_mute : BoolProperty(
         name = 'Bone Tail Mute',
-        description = "Mute wiggle on this bone's tail",
+        description = "Mute wiggle on this bone's tail. Excluded from Auto Sync",
         default = False,
         override={'LIBRARY_OVERRIDABLE'},
         update=lambda s, c: build_list()
@@ -494,7 +494,7 @@ class WiggleBoneSettings(WiggleBone):
 
     pin_target : PointerProperty(
         name='Pin Target',
-        description='Object to pin the bone to',
+        description='Object to pin the bone to. Excluded from Auto Sync',
         type=bpy.types.Object,
         override={'LIBRARY_OVERRIDABLE'},
     )

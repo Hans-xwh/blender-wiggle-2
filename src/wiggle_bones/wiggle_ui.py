@@ -59,8 +59,8 @@ class WIGGLE_PT_Head(WigglePanel, Panel):
         return context.scene.wiggle.enable and context.object and not context.object.wiggle.mute and context.active_pose_bone and not context.active_pose_bone.wiggle.mute and not context.active_pose_bone.bone.use_connect
     
     def draw_header(self, context):
-        row = self.layout.row(align=False)
-        self.layout.prop(context.active_pose_bone.wiggle, 'head')
+        row = self.layout.row(align=True)
+        row.prop(context.active_pose_bone.wiggle, 'head')
     
     def draw(self, context):
         b = context.active_pose_bone
@@ -135,7 +135,7 @@ class WIGGLE_PT_Head(WigglePanel, Panel):
             col = layout.column(align=True)
             drawprops(col, b.wiggle, ['radius_head', 'friction_head', 'bounce_head', 'sticky_head'])
         
-        layout.prop(b.wiggle, 'chain_head')
+        layout.prop(b.wiggle, 'chain_head', text='Chain', icon='LINKED')
 
 class WIGGLE_PT_Tail(WigglePanel, Panel):
     bl_label = ''
