@@ -2,7 +2,7 @@ import bpy
 from mathutils import Vector, Matrix
 
 def relative_matrix(m1,m2):
-    return (m2.inverted() @ m1).inverted()
+    return (m2.inverted_safe() @ m1).inverted_safe()
 
 def flatten(mat):
     dim = len(mat)
@@ -40,11 +40,17 @@ def build_list():
             ob.wiggle.enable = False
             continue
         
-        ob.wiggle.enable = True
-        wo = bpy.context.scene.wiggle.list.add()
+        ob.wiggle.enable = True                     #scene.wiggle.list: CollectionProperty(type=WiggleItem)
+        wo = bpy.context.scene.wiggle.list.add()    #wo: WiggleItem
+
         wo.name = ob.name
+        #wo.use_pin = ob.wiggle.use_pin
+        if ob.wiggle.use_pin:
+            wo.solver = ob.wiggle.solver
+        else: wo.solver = 'FW'
+
         for b in wigglebones:
-            wb = wo.list.add()
+            wb = wo.list.add()      #wb:WiggleBoneItem
             wb.name = b.name
             reset_bone(b)
     bpy.context.scene.wiggle.syncing = False    #Just in case it crashes while syncing, flag will be cleared on rebuild.
