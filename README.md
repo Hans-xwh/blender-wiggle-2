@@ -30,7 +30,7 @@ Different solvers provide different tradeoffs between simulation quality, pinnin
 - **Mixed** - Alternates between Forward and Backwards passes to balance pinning accuracy and simulation quality. 
 - **Dual** - Runs both Forward and Backwards passes every iteration. Provides the strongest pinning but has the highest computational cost. 
 
-![Solvers](./images/pinning_2.png?raw=true "Solvers") 
+   ![Solvers](./images/pinning_2.png?raw=true "Solvers") 
 
 
 ### Collision Support
@@ -56,7 +56,7 @@ This feature pairs bones and together with full collision detection generates an
 
 Please note that this implementation is still experimental and might not work perfectly since it's a bit challenging to test and refine. You can explore the current code on the [Bone Pairs branch](https://github.com/Labhatorian/blender-wiggle-2/tree/bonepairs).
 
-## Quick Start
+## Quick Start 
 
 1. **Install and Enable the Add-on**
    - Enable wiggle in your scene via the properties panel of the 3D viewport under the Animation tab. \
