@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.2 - (2026/09/07)
+### Bone Pinning
+* Fixed simulation crashing when colliders were disabled in viewport, or in a disabled collection. 
 
 ## 1.1.1 - (2026/07/12) 
 ### Bone Pinning 
