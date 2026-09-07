@@ -51,8 +51,11 @@ def collide(b, dg, head=False):
             
     col = False
     for collider in colliders:
+        if collider.name not in dg.objects: continue
+
         cmw = collider.matrix_world
         p = collider.closest_point_on_mesh(cmw.inverted() @ pos, depsgraph=dg)
+
         n = (cmw.to_quaternion().to_matrix().to_4x4() @ p[2]).normalized()
         i = cmw @ p[1]
         v = i-pos

@@ -2,7 +2,7 @@ schema_version = "1.0.0"
 
 id = "wiggle_bones"
 name = "Wiggle Bones"
-version = "1.1.1"
+version = "1.1.2"
 blender_version_min = "4.5.0"
 
 tagline = "Refactor of Wiggle 2, fully fixed for Blender 5.0"
